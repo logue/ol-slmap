@@ -1,0 +1,43 @@
+{
+  "name": "ol-slmap",
+  "private": true,
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "A simple map viewer for Second Life using OpenLayers",
+  "keywords": [
+    "openlayers",
+    "secondlife",
+    "map"
+  ],
+  "type": "module",
+  "author": {
+    "name": "Logue",
+    "email": "logue@hotmail.co.jp",
+    "url": "https://logue.dev/"
+  },
+  "homepage": "https://github.com/logue/ol-slmap",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/logue/ol-slmap.git"
+  },
+  "bugs": {
+    "url": "https://github.com/logue/ol-slmap/issues"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "prettier . --write"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3",
+    "sass-embedded": "^1.89.1",
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5",
+    "vite-plugin-banner": "^0.8.1"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.6",
+    "ol": "^10.5.0"
+  }
+}
