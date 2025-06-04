@@ -27,7 +27,7 @@ jobs:
       - name: Build 🔧
         run: |
           pnpm install
-          pnpm build:docs
+          pnpm build
 
       - name: Deploy to gh-pages 🚀
         uses: JamesIves/github-pages-deploy-action@v4.6.4
