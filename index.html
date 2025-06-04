@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" class="h-100">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OpenLayers SecondLife Map Viewer</title>
+    <script type="module" crossorigin src="./assets/index-B_bpGyoP.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-Bcj9oOUJ.css">
+  </head>
+  <body class="d-flex flex-column h-100">
+    <header>
+      <!-- Fixed navbar -->
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">OpenLayers SecondLife Map Viewer</a>
+        </div>
+      </nav>
+    </header>
+    <main class="container-fluid flex-grow-1 px-0">
+      <div id="map" class="h-100"></div>
+    </main>
+    <div id="popup" class="ol-popup shadow rounded border p-3 bg-light">
+      <button
+        id="popup-closer"
+        type="button"
+        class="btn-close ol-popup-closer"
+        aria-label="Close"
+      ></button>
+      <div id="popup-content"></div>
+    </div>
+  </body>
+</html>
