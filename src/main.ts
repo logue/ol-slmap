@@ -138,7 +138,7 @@ const map = new Map({
   overlays: [overlay],
   view: new View({
     projection,
-    center: [255231, 256500], // Center of the SL grid
+    center: [255230, 256510], // Center of the SL grid
     // Start at zoom level 1, so we can see the whole grid
     // Note: OpenLayers uses a zoom level of 0 for the highest zoom level,
     // so we need to subtract 1 from the zoom level.
@@ -154,7 +154,7 @@ const map = new Map({
 /**
  * Add a click handler to the map to render the popup.
  */
-map.on('singleclick', evt => {
+map.on('singleclick', async evt => {
   const coordinate = evt.coordinate;
   const x = coordinate[0] / 256;
   const y = coordinate[1] / 256;
@@ -173,16 +173,17 @@ map.on('singleclick', evt => {
     if (slRegionName == null || slRegionName.error) {
       return;
     }
-
-    const regionLocation = `${encodeURIComponent(
-      slRegionName
-    )}/${local_x}/${local_y}`;
+    const regionName = encodeURIComponent(slRegionName);
+    const regionLocation = `${regionName}/${local_x}/${local_y}`;
     const slurl = `${LOCATION_URI_PREFIX}${regionLocation}`;
 
     content.innerHTML =
-      // @ts-ignore
       `<h3><a href="${slurl}">${slRegionName}</a></h3>` +
-      `<div class="d-grid gap-2"><a class="btn btn-primary" title="Teleport" href="${slurl}">Teleport</a><a class="btn btn-secondary" href="${JOIN_BASE_URL}">Join free today</a></div></div>`;
+      `<p>Tile: ${int_x}, ${int_y}<br />` +
+      `Coordinate: ${Math.round(coordinate[0])}, ${Math.round(coordinate[1])}</p>` +
+      `<div class="d-grid gap-2"><a class="btn btn-primary" title="Teleport" href="${slurl}">Teleport</a>` +
+      `<a class="btn btn-secondary" href="${JOIN_BASE_URL}">Join free today</a></div>` +
+      `</div>`;
     overlay.setPosition(coordinate);
   });
 });
@@ -194,10 +195,22 @@ map.on('singleclick', evt => {
  * @param scriptURL the script to load
  * @param onLoadHandler a callback to call when the script is loaded (optional)
  */
-function slAddDynamicScript(scriptURL: string, onLoadHandler: Function) {
+function slAddDynamicScript(scriptURL: string, onLoadHandler: Function, id: string = 'sl-dynamic-script'): void {
+  if (document.getElementById(id)) {
+    // If the script is already loaded, remove it first
+    // This is to prevent multiple scripts being loaded if the user clicks multiple times
+    // on the map before the script has loaded
+    // This is a workaround for the fact that OpenLayers doesn't support dynamic script loading
+    // in a way that works across all browsers.
+    document.body.removeChild(
+      document.getElementById(id) as HTMLScriptElement
+    );
+  }
   const script = document.createElement('script');
   script.src = scriptURL;
+  script.id = id;
   script.type = 'text/javascript';
+  document.body.appendChild(script);
 
   if (onLoadHandler) {
     // Need to use ready state change for IE as it doesn't support onload for scripts
@@ -211,6 +224,4 @@ function slAddDynamicScript(scriptURL: string, onLoadHandler: Function) {
     // Standard onload for Firefox/Safari/Opera etc
     script.onload = () => onLoadHandler();
   }
-
-  document.body.appendChild(script);
 }
