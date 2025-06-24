@@ -10,7 +10,8 @@ import XYZ from 'ol/source/XYZ';
 import Zoom from 'ol/control/Zoom';
 import ZoomSlider from 'ol/control/ZoomSlider';
 import type { Extent } from 'ol/extent';
-
+import type MapBrowserEvent from 'ol/MapBrowserEvent';
+import type { Coordinate } from 'ol/coordinate';
 import './styles.scss';
 
 // Declare slRegionName as a global variable to be set by the dynamic script
@@ -85,7 +86,7 @@ const slLayer = new Tile({
       /** Tile origin in pixels */
       origin: [0, 0],
     }),
-    tileUrlFunction: tileCoord => {
+    tileUrlFunction: (tileCoord: Coordinate) => {
       const z = tileCoord[0];
       const x = tileCoord[1];
       const y = tileCoord[2];
@@ -109,7 +110,7 @@ const map = new Map({
   controls: [
     new MousePosition({
       className: 'text-end text-warning',
-      coordinateFormat: o => {
+      coordinateFormat: (o?: Coordinate) => {
         if (!o) return '';
         const ret: string[] = [];
         o.forEach(e => ret.push(e.toFixed(0)));
@@ -154,7 +155,7 @@ const map = new Map({
 /**
  * Add a click handler to the map to render the popup.
  */
-map.on('singleclick', async evt => {
+map.on('singleclick', async (evt: MapBrowserEvent<any>) => {
   const coordinate = evt.coordinate;
   const x = coordinate[0] / 256;
   const y = coordinate[1] / 256;
@@ -195,16 +196,18 @@ map.on('singleclick', async evt => {
  * @param scriptURL the script to load
  * @param onLoadHandler a callback to call when the script is loaded (optional)
  */
-function slAddDynamicScript(scriptURL: string, onLoadHandler: Function, id: string = 'sl-dynamic-script'): void {
+function slAddDynamicScript(
+  scriptURL: string,
+  onLoadHandler: Function,
+  id: string = 'sl-dynamic-script'
+): void {
   if (document.getElementById(id)) {
     // If the script is already loaded, remove it first
     // This is to prevent multiple scripts being loaded if the user clicks multiple times
     // on the map before the script has loaded
     // This is a workaround for the fact that OpenLayers doesn't support dynamic script loading
     // in a way that works across all browsers.
-    document.body.removeChild(
-      document.getElementById(id) as HTMLScriptElement
-    );
+    document.body.removeChild(document.getElementById(id) as HTMLScriptElement);
   }
   const script = document.createElement('script');
   script.src = scriptURL;
