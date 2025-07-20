@@ -1,8 +1,4 @@
-.husky/
-.vscode/
-.yarn/
-dist/
-public/assets/
-docs/
-stats.html
-*.yaml
+# Lock files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
