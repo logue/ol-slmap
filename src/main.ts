@@ -16,6 +16,7 @@ import './styles.scss';
 
 // Declare slRegionName as a global variable to be set by the dynamic script
 declare let slRegionName: any | undefined;
+declare let slCoord: any | undefined;
 
 /**
  * The maximum width/height of the SL grid in regions:
@@ -228,3 +229,28 @@ function slAddDynamicScript(
     script.onload = () => onLoadHandler();
   }
 }
+
+document
+  .getElementById('search-form')!
+  .addEventListener('submit', (e: Event) => {
+    console.log('Search form submitted');
+    e.preventDefault();
+    const input = document.getElementById('search-input') as HTMLInputElement;
+    const regionName = input.value.trim();
+    if (regionName) {
+      // Trigger a click on the map to show the popup for the region
+      const scriptURL = `${CAPABILITY_BASE_URL}cap/0/d661249b-2b5a-4436-966a-3d3b8d7a574f?var=slCoord&sim_name=${encodeURIComponent(regionName)}`;
+      slAddDynamicScript(scriptURL, () => {
+        if (slCoord == null || slCoord.error) {
+          alert('Region not found');
+          return;
+        }
+        
+        const local_x = slCoord.x * 256;
+        const local_y = slCoord.y * 256;
+
+        map.getView().setCenter([local_x, local_y]);
+        map.getView().setZoom(7); // Set a reasonable zoom level
+      });
+    }
+  });
