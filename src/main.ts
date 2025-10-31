@@ -111,10 +111,12 @@ const map = new Map({
   controls: [
     new MousePosition({
       className: 'text-end text-warning',
-      coordinateFormat: (o?: Coordinate) => {
-        if (!o) return '';
+      coordinateFormat: (coordinate?: Coordinate) => {
+        if (!coordinate) return '';
         const ret: string[] = [];
-        o.forEach(e => ret.push(e.toFixed(0)));
+        for (const c of coordinate) {
+          ret.push(c.toFixed(0));
+        }
         return ret.join(', ');
       },
       target: document.getElementById('mouse-position')!,
@@ -245,7 +247,7 @@ document
           alert('Region not found');
           return;
         }
-        
+
         const local_x = slCoord.x * 256;
         const local_y = slCoord.y * 256;
 
