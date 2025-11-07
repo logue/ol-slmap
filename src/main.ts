@@ -52,7 +52,6 @@ const overlay = new Overlay({
 
 /**
  * Add a click handler to hide the popup.
- * @return Don't follow the href.
  */
 closer.onclick = (): boolean => {
   overlay.setPosition(undefined);
@@ -75,6 +74,9 @@ const projection = new Projection({
 });
 addProjection(projection);
 
+/** Tile size in pixels (constant for optimization) */
+const TILE_SIZE = 256;
+
 /** Second Life Map Layer */
 const slLayer = new Tile({
   source: new XYZ({
@@ -83,7 +85,7 @@ const slLayer = new Tile({
       extent,
       resolutions,
       /** Tile size in pixels */
-      tileSize: 256,
+      tileSize: TILE_SIZE,
       /** Tile origin in pixels */
       origin: [0, 0],
     }),
@@ -113,11 +115,7 @@ const map = new Map({
       className: 'text-end text-warning',
       coordinateFormat: (coordinate?: Coordinate) => {
         if (!coordinate) return '';
-        const ret: string[] = [];
-        for (const c of coordinate) {
-          ret.push(c.toFixed(0));
-        }
-        return ret.join(', ');
+        return coordinate.map(c => c.toFixed(0)).join(', ');
       },
       target: document.getElementById('mouse-position')!,
     }),
@@ -160,14 +158,14 @@ const map = new Map({
  */
 map.on('singleclick', async (evt: MapBrowserEvent<any>) => {
   const coordinate = evt.coordinate;
-  const x = coordinate[0] / 256;
-  const y = coordinate[1] / 256;
+  const x = coordinate[0] / TILE_SIZE;
+  const y = coordinate[1] / TILE_SIZE;
   // Work out region co-ords, and local co-ords within region
   const int_x = Math.floor(x);
   const int_y = Math.floor(y);
 
-  const local_x = Math.round((x - int_x) * 256);
-  const local_y = Math.round((y - int_y) * 256);
+  const local_x = Math.round((x - int_x) * TILE_SIZE);
+  const local_y = Math.round((y - int_y) * TILE_SIZE);
 
   // Add a dynamic script to get this region name, and then trigger a URL change
   // based on the results
@@ -204,13 +202,14 @@ function slAddDynamicScript(
   onLoadHandler: Function,
   id: string = 'sl-dynamic-script'
 ): void {
-  if (document.getElementById(id)) {
+  const existingScript = document.getElementById(id);
+  if (existingScript) {
     // If the script is already loaded, remove it first
     // This is to prevent multiple scripts being loaded if the user clicks multiple times
     // on the map before the script has loaded
     // This is a workaround for the fact that OpenLayers doesn't support dynamic script loading
     // in a way that works across all browsers.
-    document.body.removeChild(document.getElementById(id) as HTMLScriptElement);
+    document.body.removeChild(existingScript);
   }
   const script = document.createElement('script');
   script.src = scriptURL;
@@ -235,7 +234,6 @@ function slAddDynamicScript(
 document
   .getElementById('search-form')!
   .addEventListener('submit', (e: Event) => {
-    console.log('Search form submitted');
     e.preventDefault();
     const input = document.getElementById('search-input') as HTMLInputElement;
     const regionName = input.value.trim();
@@ -248,8 +246,8 @@ document
           return;
         }
 
-        const local_x = slCoord.x * 256;
-        const local_y = slCoord.y * 256;
+        const local_x = slCoord.x * TILE_SIZE;
+        const local_y = slCoord.y * TILE_SIZE;
 
         map.getView().setCenter([local_x, local_y]);
         map.getView().setZoom(7); // Set a reasonable zoom level
