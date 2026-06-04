@@ -1,2 +1,6 @@
+allowBuilds:
+  core-js: true
+minimumReleaseAgeExclude:
+  - '@rsbuild/core@2.0.11'
 onlyBuiltDependencies:
   - core-js
