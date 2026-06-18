@@ -1,9 +1,17 @@
 {
+  "extends": "@tsconfig/node-lts/tsconfig.json",
   "compilerOptions": {
-    "lib": ["DOM", "ES2022"],
-    "target": "ES2022",
+    "types": [
+      "@rsbuild/core/types",
+      "@rslint/core/types",
+      /**
+       * The following type definitions are required for the @awesome.me/webawesome package.
+       * They provide type information for the custom elements and JSX used in the package.
+       */
+      "node_modules/@awesome.me/webawesome/dist/custom-elements-jsx.d.ts"
+    ],
+    "lib": ["DOM", "ESNext"],
     "noEmit": true,
-    "skipLibCheck": true,
     "useDefineForClassFields": true,
 
     /* modules */
@@ -14,7 +22,6 @@
     "allowImportingTsExtensions": true,
 
     /* type checking */
-    "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true
   },

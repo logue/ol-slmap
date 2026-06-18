@@ -2,5 +2,14 @@ allowBuilds:
   core-js: true
 minimumReleaseAgeExclude:
   - '@rsbuild/core@2.0.11'
+  - '@rslint/core@0.6.2'
+  - '@rslint/native-darwin-arm64@0.6.2'
+  - '@rslint/native-darwin-x64@0.6.2'
+  - '@rslint/native-linux-arm64-gnu@0.6.2'
+  - '@rslint/native-linux-arm64-musl@0.6.2'
+  - '@rslint/native-linux-x64-gnu@0.6.2'
+  - '@rslint/native-linux-x64-musl@0.6.2'
+  - '@rslint/native-win32-arm64-msvc@0.6.2'
+  - '@rslint/native-win32-x64-msvc@0.6.2'
 onlyBuiltDependencies:
   - core-js
