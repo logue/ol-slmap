@@ -1,63 +1,77 @@
 <!doctype html>
-<html lang="en" class="h-100">
+<html
+  lang="en"
+  class="wa-theme-default wa-palette-default wa-brand-blue wa-neutral-gray"
+>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OpenLayers SecondLife Map Viewer</title>
-  <script defer src="/ol-slmap/static/js/177.b80d1798b9.js"></script><script defer src="/ol-slmap/static/js/index.a6b8bd4d89.js"></script><link href="/ol-slmap/static/css/index.5aa6ad4c56.css" rel="stylesheet"></head>
-  <body class="d-flex flex-column h-100">
-    <header>
-      <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">OpenLayers SecondLife Map Viewer</a>
-          <div class="collapse navbar-collapse flex-grow-0" id="navbarCollapse">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link" href="https://github.com/logue/ol-slmap">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    class="bi bi-github"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"
-                    />
-                  </svg>
-                </a>
-              </li>
-            </ul>
-            <form class="d-flex" role="search" id="search-form">
-              <input
-                class="form-control me-2"
-                id="search-input"
-                type="search"
-                placeholder="Enter a region name"
-                aria-label="Search"
-                value="Ranchero"
-              />
-              <button class="btn btn-outline-success" type="submit">
-                Search
-              </button>
-            </form>
-          </div>
+  <script defer src="/ol-slmap/static/js/612.dbbd8b731e.js"></script><script defer src="/ol-slmap/static/js/index.4f62011f32.js"></script><link href="/ol-slmap/static/css/612.dbfdd7efaa.css" rel="stylesheet"><link href="/ol-slmap/static/css/index.b8e8a13da4.css" rel="stylesheet"></head>
+  <body>
+    <wa-page mobile-breakpoint="768" flex-direction="column">
+      <header
+        slot="header"
+        class="wa-dark wa-cluster wa-split wa-align-items-center"
+      >
+        <h1 slot="header-start" class="wa-heading-l">
+          OpenLayers SecondLife Map Viewer
+        </h1>
+
+        <div
+          slot="header-end"
+          class="wa-cluster wa-gap-s wa-align-items-center"
+        >
+          <wa-button
+            appearance="plain"
+            href="https://github.com/secondlife/ol-slmap"
+            target="_blank"
+            size="small"
+          >
+            <wa-icon name="github" family="brands"></wa-icon>
+          </wa-button>
+          <form class="wa-desktop-only navbar-search" id="search-form">
+            <wa-input
+              id="search-input"
+              type="search"
+              size="small"
+              form="search-form"
+              placeholder="Region..."
+              clearable
+            >
+              <wa-button
+                id="search"
+                type="submit"
+                slot="end"
+                size="small"
+                appearance="plain"
+              >
+                <wa-icon name="magnifying-glass"></wa-icon>
+              </wa-button>
+            </wa-input>
+          </form>
+          <wa-button class="wa-mobile-only" variant="neutral" size="small">
+            <wa-icon name="magnifying-glass"></wa-icon>
+          </wa-button>
         </div>
-      </nav>
-    </header>
-    <main class="container-fluid flex-grow-1 px-0">
-      <div id="map" class="h-100"></div>
-    </main>
-    <div id="popup" class="ol-popup shadow rounded border p-3 bg-light">
-      <button
-        id="popup-closer"
-        type="button"
-        class="btn-close ol-popup-closer"
-        aria-label="Close"
-      ></button>
-      <div id="popup-content"></div>
+      </header>
+      <main>
+        <div id="map"></div>
+      </main>
+    </wa-page>
+    <div id="popup" class="ol-popup">
+      <wa-card>
+        <div class="popup-header-wrapper">
+          <h3 id="popup-title">Region</h3>
+          <wa-icon-button
+            name="x-lg"
+            id="popup-closer"
+            class="popup-close"
+          ></wa-icon-button>
+        </div>
+        <div id="popup-content"></div>
+      </wa-card>
     </div>
-    <script type="module" src="/src/main.ts"></script>
   </body>
+  <script type="module" src="/src/main.ts"></script>
 </html>
