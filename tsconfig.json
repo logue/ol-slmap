@@ -1,29 +1,12 @@
 {
-  "extends": "@tsconfig/node-lts/tsconfig.json",
-  "compilerOptions": {
-    "types": [
-      "@rsbuild/core/types",
-      "@rslint/core/types",
-      /**
-       * The following type definitions are required for the @awesome.me/webawesome package.
-       * They provide type information for the custom elements and JSX used in the package.
-       */
-      "node_modules/@awesome.me/webawesome/dist/custom-elements-jsx.d.ts"
-    ],
-    "lib": ["DOM", "ESNext"],
-    "noEmit": true,
-    "useDefineForClassFields": true,
-
-    /* modules */
-    "module": "ESNext",
-    "verbatimModuleSyntax": true,
-    "resolveJsonModule": true,
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-
-    /* type checking */
-    "noUnusedLocals": true,
-    "noUnusedParameters": true
-  },
-  "include": ["src"]
+  "$schema": "https://json.schemastore.org/tsconfig.json",
+  "files": [],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.rsbuild.json"
+    }
+  ]
 }

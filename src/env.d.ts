@@ -17,7 +17,10 @@ declare global {
       size: 'small' | 'medium' | 'large';
       disabled: boolean;
     };
-    'wa-icon': HTMLElement & { name: string; label?: string };
+    'wa-icon': HTMLElement & {
+      name: string;
+      label?: string;
+    };
     'wa-input': HTMLElement & {
       value: string;
       placeholder?: string;

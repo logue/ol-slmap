@@ -5,16 +5,25 @@
 >
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
     <title>OpenLayers SecondLife Map Viewer</title>
   </head>
   <body>
-    <wa-page mobile-breakpoint="768" flex-direction="column">
+    <wa-page
+      mobile-breakpoint="768"
+      flex-direction="column"
+    >
       <header
         slot="header"
         class="wa-dark wa-cluster wa-split wa-align-items-center"
       >
-        <h1 slot="header-start" class="wa-heading-l">
+        <h1
+          slot="header-start"
+          class="wa-heading-l"
+        >
           OpenLayers SecondLife Map Viewer
         </h1>
 
@@ -28,9 +37,15 @@
             target="_blank"
             size="small"
           >
-            <wa-icon name="github" family="brands"></wa-icon>
+            <wa-icon
+              name="github"
+              family="brands"
+            ></wa-icon>
           </wa-button>
-          <form class="wa-desktop-only navbar-search" id="search-form">
+          <form
+            class="wa-desktop-only navbar-search"
+            id="search-form"
+          >
             <wa-input
               id="search-input"
               type="search"
@@ -50,7 +65,11 @@
               </wa-button>
             </wa-input>
           </form>
-          <wa-button class="wa-mobile-only" variant="neutral" size="small">
+          <wa-button
+            class="wa-mobile-only"
+            variant="neutral"
+            size="small"
+          >
             <wa-icon name="magnifying-glass"></wa-icon>
           </wa-button>
         </div>
@@ -59,7 +78,10 @@
         <div id="map"></div>
       </main>
     </wa-page>
-    <div id="popup" class="ol-popup">
+    <div
+      id="popup"
+      class="ol-popup"
+    >
       <wa-card>
         <div class="popup-header-wrapper">
           <h3 id="popup-title">Region</h3>
@@ -73,5 +95,8 @@
       </wa-card>
     </div>
   </body>
-  <script type="module" src="/src/main.ts"></script>
+  <script
+    type="module"
+    src="/src/main.ts"
+  ></script>
 </html>

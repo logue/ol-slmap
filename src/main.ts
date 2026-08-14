@@ -32,8 +32,19 @@ import TileGrid from 'ol/tilegrid/TileGrid';
 import View from 'ol/View';
 
 // Declare slRegionName as a global variable to be set by the dynamic script
-declare let slRegionName: string | { error: string } | undefined;
-declare let slCoord: { error?: string; x: number; y: number } | undefined;
+declare let slRegionName:
+  | string
+  | {
+      error: string;
+    }
+  | undefined;
+declare let slCoord:
+  | {
+      error?: string;
+      x: number;
+      y: number;
+    }
+  | undefined;
 
 /**
  * The maximum width/height of the SL grid in regions:
@@ -78,7 +89,12 @@ closer.onclick = (): boolean => {
 };
 
 /** Max map size [minx, miny, maxx, maxy] */
-const extent: Extent = [0, 0, MAP_GRID_EDGE_SIZE, MAP_GRID_EDGE_SIZE];
+const extent: Extent = [
+  0,
+  0,
+  MAP_GRID_EDGE_SIZE,
+  MAP_GRID_EDGE_SIZE,
+];
 /** All Resolution */
 const resolutions: number[] = [];
 for (let zl = MIN_ZOOM_LEVEL; zl <= MAX_ZOOM_LEVEL; zl++) {
@@ -105,7 +121,10 @@ const slLayer = new Tile({
       /** Tile size in pixels */
       tileSize: TILE_SIZE,
       /** Tile origin in pixels */
-      origin: [0, 0],
+      origin: [
+        0,
+        0,
+      ],
     }),
     tileUrlFunction: (tileCoord: Coordinate) => {
       const z = tileCoord[0];
@@ -139,7 +158,9 @@ const map = new OlMap({
     }),
     new Zoom(),
     new ZoomSlider(),
-    new Attribution({ collapsible: false }),
+    new Attribution({
+      collapsible: false,
+    }),
   ],
   target: 'map',
   layers: [
@@ -155,10 +176,15 @@ const map = new OlMap({
     }),
     */
   ],
-  overlays: [overlay],
+  overlays: [
+    overlay,
+  ],
   view: new View({
     projection,
-    center: [255230, 256510], // Center of the SL grid
+    center: [
+      255230,
+      256510,
+    ], // Center of the SL grid
     // Start at zoom level 1, so we can see the whole grid
     // Note: OpenLayers uses a zoom level of 0 for the highest zoom level,
     // so we need to subtract 1 from the zoom level.
@@ -238,7 +264,9 @@ function slAddDynamicScript(
   if (onLoadHandler) {
     // Need to use ready state change for IE as it doesn't support onload for scripts
     script.addEventListener('readystatechange', () => {
-      const s = script as HTMLScriptElement & { readyState?: string };
+      const s = script as HTMLScriptElement & {
+        readyState?: string;
+      };
       if (s.readyState === 'complete' || s.readyState === 'loaded') {
         onLoadHandler();
       }
@@ -267,7 +295,10 @@ document
         const local_x = slCoord.x * TILE_SIZE;
         const local_y = slCoord.y * TILE_SIZE;
 
-        map.getView().setCenter([local_x, local_y]);
+        map.getView().setCenter([
+          local_x,
+          local_y,
+        ]);
         map.getView().setZoom(7); // Set a reasonable zoom level
       });
     }

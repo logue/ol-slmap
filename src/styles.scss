@@ -1,4 +1,4 @@
-@import 'ol/ol.css';
+@import "ol/ol.css";
 header {
   box-shadow: var(--wa-shadow-l);
 }
@@ -39,7 +39,7 @@ main {
     top: 100%;
     left: 48px;
     border: solid transparent;
-    content: ' ';
+    content: " ";
     height: 0;
     width: 0;
     position: absolute;
