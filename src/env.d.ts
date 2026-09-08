@@ -17,6 +17,11 @@ declare global {
       size: 'small' | 'medium' | 'large';
       disabled: boolean;
     };
+    'wa-card': HTMLElement & {
+      title?: string;
+      subtitle?: string;
+      image?: string;
+    };
     'wa-icon': HTMLElement & {
       name: string;
       label?: string;
@@ -25,11 +30,6 @@ declare global {
       value: string;
       placeholder?: string;
       disabled?: boolean;
-    };
-    'wa-card': HTMLElement & {
-      title?: string;
-      subtitle?: string;
-      image?: string;
     };
   }
 }

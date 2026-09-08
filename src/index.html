@@ -1,0 +1,72 @@
+<!doctype html>
+<html
+  class="wa-theme-default wa-palette-default wa-brand-blue wa-neutral-gray"
+  lang="en"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>OpenLayers SecondLife Map Viewer</title>
+  </head>
+  <body>
+    <wa-page flex-direction="column" mobile-breakpoint="768">
+      <header
+        class="wa-dark wa-cluster wa-split wa-align-items-center"
+        slot="header"
+      >
+        <h1 class="wa-heading-l" slot="header-start">
+          OpenLayers SecondLife Map Viewer
+        </h1>
+
+        <div
+          class="wa-cluster wa-gap-s wa-align-items-center"
+          slot="header-end"
+        >
+          <wa-button
+            appearance="plain"
+            href="https://github.com/logue/ol-slmap"
+            size="small"
+            target="_blank"
+          >
+            <wa-icon family="brands" name="github" />
+          </wa-button>
+          <form class="wa-desktop-only navbar-search" id="search-form">
+            <wa-input
+              clearable
+              form="search-form"
+              id="search-input"
+              placeholder="Region..."
+              size="small"
+              type="search"
+            >
+              <wa-button
+                appearance="plain"
+                id="search"
+                size="small"
+                slot="end"
+                type="submit"
+              >
+                <wa-icon name="magnifying-glass" />
+              </wa-button>
+            </wa-input>
+          </form>
+          <wa-button class="wa-mobile-only" size="small" variant="neutral">
+            <wa-icon name="magnifying-glass" />
+          </wa-button>
+        </div>
+      </header>
+      <main>
+        <div id="map"></div>
+      </main>
+    </wa-page>
+    <div class="ol-popup" id="popup">
+      <wa-card>
+        <div class="popup-header-wrapper">
+          <h3 id="popup-title">Region</h3>
+          <wa-icon-button class="popup-close" id="popup-closer" name="x-lg" />
+        </div>
+        <div id="popup-content"></div>
+      </wa-card>
+    </div>
+  </body>
+</html>

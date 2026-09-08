@@ -1,17 +1,18 @@
-import { fileURLToPath, URL } from 'node:url';
 import { defineConfig } from '@rsbuild/core';
 import { pluginSass } from '@rsbuild/plugin-sass';
+
+import { fileURLToPath, URL } from 'node:url';
 
 export default defineConfig({
   plugins: [
     pluginSass(),
   ],
   html: {
-    template: './index.html',
+    template: './src/index.html',
   },
   source: {
     entry: {
-      index: './src/main.js',
+      index: './src/index.ts',
     },
   },
   resolve: {

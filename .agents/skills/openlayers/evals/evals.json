@@ -1,0 +1,36 @@
+{
+  "skill_name": "openlayers",
+  "version": "1.2.0",
+  "evals": [
+    {
+      "id": 1,
+      "name": "Modern Interactive Raster Basemap",
+      "prompt": "Create an interactive high-DPI raster basemap in OpenLayers with smooth zooming, navigation controls, and clean streets styling.",
+      "expected_output": "A complete, valid HTML/JavaScript application using modular ES imports from the 'ol' package, importing ol/ol.css, initializing an ol/Map with target 'map', and configuring a high-DPI 512px raster tile basemap with ol/layer/Tile and ol/source/XYZ using MapTiler Streets v4 (https://api.maptiler.com/maps/streets-v4/{z}/{x}/{y}@2x.png?key=...)."
+    },
+    {
+      "id": 2,
+      "name": "Interactive Geometry Digitization (Draw/Modify/Snap)",
+      "prompt": "Build an interactive map editing tool in OpenLayers where users can draw, modify, and magnetically snap polygon geometries.",
+      "expected_output": "A standalone web page importing ol/interaction/Draw, ol/interaction/Modify, and ol/interaction/Snap, attaching all three interactions to an active ol/layer/Vector with ol/source/Vector, and enabling magnetic vertex snapping."
+    },
+    {
+      "id": 3,
+      "name": "High-Performance Point Clustering",
+      "prompt": "Create a high-performance point clustering map in OpenLayers with dynamic count labels and zoom expansion on click.",
+      "expected_output": "A complete page importing ol/source/Cluster, ol/layer/Vector, wrapping a point source in Cluster with a distance parameter, styling cluster circles and text labels with feature count, and zooming to the cluster extent on click."
+    },
+    {
+      "id": 4,
+      "name": "Split-Screen Layer Swipe Comparison",
+      "prompt": "Implement an interactive split-screen swipe comparison slider between satellite imagery and a street map in OpenLayers.",
+      "expected_output": "A web application with two tile layers, an HTML range slider or mouse drag listener, using canvas prerender and postrender event clipping to render half of the viewport with satellite and the other half with streets."
+    },
+    {
+      "id": 5,
+      "name": "Cloud-Optimized GeoTIFF (COG) Ingestion",
+      "prompt": "Render a Cloud-Optimized GeoTIFF (COG) satellite image in OpenLayers with hardware-accelerated WebGL rendering.",
+      "expected_output": "A standalone page importing ol/layer/WebGLTile and ol/source/GeoTIFF, configuring a COG source URL with normalize: true, and setting up dynamic client-side raster styling expressions."
+    }
+  ]
+}

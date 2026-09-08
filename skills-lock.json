@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "openlayers": {
+      "source": "mapsnippets/openlayers-skill",
+      "sourceType": "github",
+      "skillPath": "skills/openlayers/SKILL.md",
+      "computedHash": "6ba59f1406a1b70e59255c28170ee488127d6d9341bd318d07ddefc7a066e24e"
+    }
+  }
+}

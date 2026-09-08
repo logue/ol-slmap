@@ -1,35 +1,35 @@
 // Shoelace imports
-import { setBasePath } from '@awesome.me/webawesome/dist/utilities/base-path.js';
-// Web Awesome styles
-import '@awesome.me/webawesome/dist/styles/webawesome.css';
-// Import the components you want to use
 import '@awesome.me/webawesome/dist/components/page/page.js';
 import '@awesome.me/webawesome/dist/components/input/input.js';
 import '@awesome.me/webawesome/dist/components/button/button.js';
 import '@awesome.me/webawesome/dist/components/icon/icon.js';
 import '@awesome.me/webawesome/dist/components/card/card.js';
+// Web Awesome styles
+import '@awesome.me/webawesome/dist/styles/webawesome.css';
+
+import { setBasePath } from '@awesome.me/webawesome/dist/utilities/base-path.js';
 
 // Set the base path to the Shoelace assets (e.g. icons, themes)
 setBasePath('@awesome.me/webawesome/dist');
 
 // Import base styles for the appß
 import './styles.scss';
-
+import OlMap from 'ol/Map';
+import Overlay from 'ol/Overlay';
+import View from 'ol/View';
 import Attribution from 'ol/control/Attribution';
 import MousePosition from 'ol/control/MousePosition';
 import Zoom from 'ol/control/Zoom';
 import ZoomSlider from 'ol/control/ZoomSlider';
-import type { Coordinate } from 'ol/coordinate';
-import type { Extent } from 'ol/extent';
 import Tile from 'ol/layer/Tile';
-import OlMap from 'ol/Map';
-import type MapBrowserEvent from 'ol/MapBrowserEvent';
-import Overlay from 'ol/Overlay';
 // OpenLayers imports
 import { addProjection, Projection } from 'ol/proj';
 import XYZ from 'ol/source/XYZ';
 import TileGrid from 'ol/tilegrid/TileGrid';
-import View from 'ol/View';
+
+import type MapBrowserEvent from 'ol/MapBrowserEvent';
+import type { Coordinate } from 'ol/coordinate';
+import type { Extent } from 'ol/extent';
 
 // Declare slRegionName as a global variable to be set by the dynamic script
 declare let slRegionName:
