@@ -6,6 +6,24 @@
       "sourceType": "github",
       "skillPath": "skills/openlayers/SKILL.md",
       "computedHash": "6ba59f1406a1b70e59255c28170ee488127d6d9341bd318d07ddefc7a066e24e"
+    },
+    "rsbuild-best-practices": {
+      "source": "rstackjs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/rsbuild-best-practices/SKILL.md",
+      "computedHash": "370b2405efb009d4bc4b7f009c8ea2661a375abe59a0d873fe9af619bfc80733"
+    },
+    "rsdoctor-analysis": {
+      "source": "rstackjs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/rsdoctor-analysis/SKILL.md",
+      "computedHash": "1aa36522b3ef319f9348fe0b7d7863c8b2d0d2ee76a1f784f895d239cb02ebd2"
+    },
+    "rstest-best-practices": {
+      "source": "rstackjs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/rstest-best-practices/SKILL.md",
+      "computedHash": "2657c33744b26c4d2cde2c238a6ad52e92532f240f345d0f798b3252a729fcbb"
     }
   }
 }

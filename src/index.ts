@@ -1,17 +1,11 @@
-// Shoelace imports
+// Web Awesome imports
 import '@awesome.me/webawesome/dist/components/page/page.js';
 import '@awesome.me/webawesome/dist/components/input/input.js';
 import '@awesome.me/webawesome/dist/components/button/button.js';
 import '@awesome.me/webawesome/dist/components/icon/icon.js';
 import '@awesome.me/webawesome/dist/components/card/card.js';
-// Web Awesome styles
 import '@awesome.me/webawesome/dist/styles/webawesome.css';
-
 import { setBasePath } from '@awesome.me/webawesome/dist/utilities/base-path.js';
-
-// Set the base path to the Shoelace assets (e.g. icons, themes)
-setBasePath('@awesome.me/webawesome/dist');
-
 // Import base styles for the appß
 import './styles.scss';
 import OlMap from 'ol/Map';
@@ -30,6 +24,9 @@ import TileGrid from 'ol/tilegrid/TileGrid';
 import type MapBrowserEvent from 'ol/MapBrowserEvent';
 import type { Coordinate } from 'ol/coordinate';
 import type { Extent } from 'ol/extent';
+
+// Set the base path to the Web Awesome assets (e.g. icons, themes)
+setBasePath('@awesome.me/webawesome/dist');
 
 // Declare slRegionName as a global variable to be set by the dynamic script
 declare let slRegionName:
@@ -60,13 +57,23 @@ const LOCATION_URI_PREFIX = 'secondlife://';
 const SL_BASE_URL = 'https://secondlife.com/';
 const TILE_URL = 'https://secondlife-maps-cdn.akamaized.net';
 
+function getRequiredElement<ElementType extends HTMLElement>(
+  id: string
+): ElementType {
+  const element = document.getElementById(id);
+  if (!element) {
+    throw new Error(`Required element not found: #${id}`);
+  }
+  return element as ElementType;
+}
+
 /**
  * Elements that make up the popup.
  */
-const container = document.getElementById('popup')!;
-const title = document.getElementById('popup-title')!;
-const content = document.getElementById('popup-content')!;
-const closer = document.getElementById('popup-closer')!;
+const container = getRequiredElement('popup');
+const title = getRequiredElement('popup-title');
+const content = getRequiredElement('popup-content');
+const closer = getRequiredElement('popup-closer');
 /**
  * Create an overlay to anchor the popup to the map.
  */
@@ -74,9 +81,9 @@ const overlay = new Overlay({
   element: container,
   autoPan: {
     animation: {
-      duration: 250,
-    },
-  },
+      duration: 250
+    }
+  }
 });
 
 /**
@@ -89,12 +96,7 @@ closer.onclick = (): boolean => {
 };
 
 /** Max map size [minx, miny, maxx, maxy] */
-const extent: Extent = [
-  0,
-  0,
-  MAP_GRID_EDGE_SIZE,
-  MAP_GRID_EDGE_SIZE,
-];
+const extent: Extent = [0, 0, MAP_GRID_EDGE_SIZE, MAP_GRID_EDGE_SIZE];
 /** All Resolution */
 const resolutions: number[] = [];
 for (let zl = MIN_ZOOM_LEVEL; zl <= MAX_ZOOM_LEVEL; zl++) {
@@ -104,7 +106,7 @@ for (let zl = MIN_ZOOM_LEVEL; zl <= MAX_ZOOM_LEVEL; zl++) {
 const projection = new Projection({
   code: 'raster',
   units: 'tile-pixels',
-  extent,
+  extent
 });
 addProjection(projection);
 
@@ -121,10 +123,7 @@ const slLayer = new Tile({
       /** Tile size in pixels */
       tileSize: TILE_SIZE,
       /** Tile origin in pixels */
-      origin: [
-        0,
-        0,
-      ],
+      origin: [0, 0]
     }),
     tileUrlFunction: (tileCoord: Coordinate) => {
       const z = tileCoord[0];
@@ -141,8 +140,8 @@ const slLayer = new Tile({
 
       return `${TILE_URL}/map-${zoomLevel}-${region_x}-${region_y}-objects.jpg`;
     },
-    attributions: `© <a href="${SL_BASE_URL}">Second Life</a>`,
-  }),
+    attributions: `© <a href="${SL_BASE_URL}">Second Life</a>`
+  })
 });
 
 /** OpenLayers Map */
@@ -152,19 +151,19 @@ const map = new OlMap({
       className: 'ol-mouse-position wa-text-end',
       coordinateFormat: (coordinate?: Coordinate) => {
         if (!coordinate) return '';
-        return coordinate.map((c) => c.toFixed(0)).join(', ');
+        return coordinate.map(c => c.toFixed(0)).join(', ');
       },
-      target: document.getElementById('mouse-position')!,
+      target: getRequiredElement('mouse-position')
     }),
     new Zoom(),
     new ZoomSlider(),
     new Attribution({
-      collapsible: false,
-    }),
+      collapsible: false
+    })
   ],
   target: 'map',
   layers: [
-    slLayer,
+    slLayer
     /*
     new Tile({
       source: new TileDebug({
@@ -176,15 +175,10 @@ const map = new OlMap({
     }),
     */
   ],
-  overlays: [
-    overlay,
-  ],
+  overlays: [overlay],
   view: new View({
     projection,
-    center: [
-      255230,
-      256510,
-    ], // Center of the SL grid
+    center: [255230, 256510], // Center of the SL grid
     // Start at zoom level 1, so we can see the whole grid
     // Note: OpenLayers uses a zoom level of 0 for the highest zoom level,
     // so we need to subtract 1 from the zoom level.
@@ -193,8 +187,8 @@ const map = new OlMap({
     maxZoom: MAX_ZOOM_LEVEL - 1,
     extent,
     resolution: 1,
-    resolutions,
-  }),
+    resolutions
+  })
 });
 
 /**
@@ -244,7 +238,7 @@ map.on('singleclick', async (evt: MapBrowserEvent) => {
 function slAddDynamicScript(
   scriptURL: string,
   onLoadHandler: () => void,
-  id: string = 'sl-dynamic-script',
+  id = 'sl-dynamic-script'
 ): void {
   const existingScript = document.getElementById(id);
   if (existingScript) {
@@ -259,7 +253,7 @@ function slAddDynamicScript(
   script.src = scriptURL;
   script.id = id;
   script.type = 'text/javascript';
-  document.body.appendChild(script);
+  document.body.append(script);
 
   if (onLoadHandler) {
     // Need to use ready state change for IE as it doesn't support onload for scripts
@@ -295,10 +289,7 @@ document
         const local_x = slCoord.x * TILE_SIZE;
         const local_y = slCoord.y * TILE_SIZE;
 
-        map.getView().setCenter([
-          local_x,
-          local_y,
-        ]);
+        map.getView().setCenter([local_x, local_y]);
         map.getView().setZoom(7); // Set a reasonable zoom level
       });
     }

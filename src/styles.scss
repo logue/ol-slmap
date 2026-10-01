@@ -1,4 +1,4 @@
-@import "ol/ol.css";
+@import 'ol/ol.css';
 
 /* wa-input のサイズ調整 */
 .navbar-search {
@@ -36,7 +36,7 @@ main {
     top: 100%;
     left: 48px;
     border: solid transparent;
-    content: " ";
+    content: ' ';
     height: 0;
     width: 0;
     position: absolute;

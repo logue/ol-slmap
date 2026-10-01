@@ -1,0 +1,4 @@
+{
+  "recommendations": ["rstack.rstack", "esbenp.prettier-vscode"],
+  "unwantedRecommendations": ["rstack.rslint", "rstack.rstest"]
+}
