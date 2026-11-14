@@ -1,29 +1,29 @@
 {
-  "version": 1,
+  "version": 2,
   "skills": {
     "openlayers": {
       "source": "mapsnippets/openlayers-skill",
       "sourceType": "github",
       "skillPath": "skills/openlayers/SKILL.md",
-      "computedHash": "6ba59f1406a1b70e59255c28170ee488127d6d9341bd318d07ddefc7a066e24e"
+      "computedHash": "25ad8fc5267f143662e51afac381d0665136fe355bf7e4c742e530c6e4284f67"
     },
     "rsbuild-best-practices": {
       "source": "rstackjs/agent-skills",
       "sourceType": "github",
       "skillPath": "skills/rsbuild-best-practices/SKILL.md",
-      "computedHash": "370b2405efb009d4bc4b7f009c8ea2661a375abe59a0d873fe9af619bfc80733"
+      "computedHash": "dce08fd21a5a49c8e2ba9e3d9b621aac83ce48d317cd20a00ed133b8742e7a90"
     },
     "rsdoctor-analysis": {
       "source": "rstackjs/agent-skills",
       "sourceType": "github",
       "skillPath": "skills/rsdoctor-analysis/SKILL.md",
-      "computedHash": "1aa36522b3ef319f9348fe0b7d7863c8b2d0d2ee76a1f784f895d239cb02ebd2"
+      "computedHash": "9b1b9f6415bc5c4e983390f9579ee890b55af533ca1d9bafc059bc3268c52de9"
     },
     "rstest-best-practices": {
       "source": "rstackjs/agent-skills",
       "sourceType": "github",
       "skillPath": "skills/rstest-best-practices/SKILL.md",
-      "computedHash": "2657c33744b26c4d2cde2c238a6ad52e92532f240f345d0f798b3252a729fcbb"
+      "computedHash": "20510a0f393b5d31f970158f211767a59a0c8fd0069f840f5b1ddfeab2796eac"
     }
   }
 }

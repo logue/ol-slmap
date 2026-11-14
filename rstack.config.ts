@@ -1,16 +1,28 @@
 import { pluginSass } from '@rsbuild/plugin-sass';
 import { pluginTypeCheck } from '@rsbuild/plugin-type-check';
-import { RsdoctorRspackPlugin } from '@rsdoctor/rspack-plugin';
+import { RsdoctorRspackPlugin } from '@rsdoctor/core';
 import { define } from 'rstack';
 
 import { readFileSync } from 'node:fs';
-import { fileURLToPath, URL } from 'node:url';
+import path from 'node:path';
 
-import markdownPlugin from '@eslint/markdown';
 import prettierPlugin from 'eslint-config-prettier';
 
 /** Parse package.json content */
-const pkg = JSON.parse(readFileSync('./package.json', 'utf-8')) as {
+const package_ = JSON.parse(readFileSync('./package.json', 'utf-8')) as {
+  name: string;
+  description: string;
+  author: {
+    name: string;
+    email: string;
+  };
+  license: string;
+  version: string;
+  homepage: string;
+};
+
+/** Parse package.json content */
+const packageJson = JSON.parse(readFileSync('./package.json', 'utf-8')) as {
   name: string;
   description: string;
   author: {
@@ -24,56 +36,55 @@ const pkg = JSON.parse(readFileSync('./package.json', 'utf-8')) as {
 
 const buildDate = new Date().toISOString();
 const bannerText = `/**
-* ${pkg.name}
+* ${packageJson.name}
 *
-* @description ${pkg.description}
-* @author ${pkg.author.name} <${pkg.author.email}>
-* @license ${pkg.license}
-* @version ${pkg.version}
-* @see {@link ${pkg.homepage}}
+* @description ${packageJson.description}
+* @author ${packageJson.author.name} <${packageJson.author.email}>
+* @license ${packageJson.license}
+* @version ${packageJson.version}
+* @see {@link ${packageJson.homepage}}
 */
 `;
 
 const createBuildDefines = () => ({
-  'import.meta.env.APP_VERSION': JSON.stringify(pkg.version),
+  'import.meta.env.APP_VERSION': JSON.stringify(packageJson.version),
   'import.meta.env.BUILD_DATE': JSON.stringify(buildDate)
 });
 
-const createRsdoctorPlugins = () =>
-  process.env.RSDOCTOR === 'true' ? [new RsdoctorRspackPlugin()] : [];
-
 const IGNORE_PATTERNS = [
   // AI agents skill docs.
+  '**/.agent/**',
   '**/.agents/**',
+  '**/.claude/**',
+  '**/.cursor/**',
+  '**/.windsurf/**',
   // Build intermediate artifacts.
   '**/.cache/**',
   '**/.data/**',
   '**/.mf/**',
   '**/.nitro/**',
   '**/.nuxt/**',
-  '**/.output/**',
+  '**/.pnpm/**',
+  '**/.rsdoctor/**',
   '**/.rstack/**',
   // Test coverage reports.
   '**/coverage/**',
-  '**/reports',
-  '**/test-results',
+  '**/e2e/**',
+  '**/playwright-report/**',
+  '**/reports/**',
+  '**/test-results/**',
   // Build artifacts.
   '**/demo/**',
-  '**/dist-ssr/**',
   '**/dist/**',
   '**/docs/**',
   '**/storybook-static/**',
-  // Grit (Biome Rules) source artifacts.
-  '**/grit/**',
-  // Node modules.
+  '**/target/**',
+  // Node modules
   '**/node_modules/**'
 ];
 
-const APP_FILES = [
-  '**/*.{ts,mts,tsx,js,mjs,jsx,json,jsonc,yml,yaml,mdx,vue,astro,svelte}'
-];
+const APP_FILES = ['**/*.{ts,mts,tsx,js,mjs,jsx,json,jsonc,vue,astro,svelte}'];
 const TEST_FILES = ['**/*.{test,spec}.{ts,mts,tsx,js,mjs,jsx}'];
-const DOC_FILES = ['**/*.{md,mdx}'];
 
 /**
  * Rsbuild (Demo application) config
@@ -85,13 +96,15 @@ define.app({
     template: './src/index.html'
   },
   source: {
+    define: createBuildDefines(),
     entry: {
       index: './src/index.ts'
-    }
+    },
+    tsconfigPath: './tsconfig.rsbuild.json'
   },
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': path.resolve(import.meta.dirname, 'src')
     }
   },
   server: {
@@ -99,7 +112,18 @@ define.app({
   },
   tools: {
     rspack: {
-      plugins: createRsdoctorPlugins()
+      plugins: [
+        // Only register the plugin when RSDOCTOR is true, as the plugin will increase the build time.
+        process.env.RSDOCTOR &&
+          new RsdoctorRspackPlugin({
+            // plugin options
+            // @see {@link https://rsdoctor.rs/guide/start/features | Rsdoctor Docs}
+            output: {
+              // Do not output report in dist dir.
+              reportDir: '.rstack/'
+            }
+          })
+      ].filter(Boolean)
     }
   }
 });
@@ -141,7 +165,7 @@ define.lint(
     js,
     ts,
     reactPlugin,
-    reactHooksPlugin,
+    // reactHooksPlugin,
     importPlugin,
     // nodePlugin,
     promisePlugin,
@@ -150,15 +174,24 @@ define.lint(
     unicornPlugin,
     jsxA11yPlugin
   }) => [
+    // `ignores` must live in its own object to act as a global ignore.
     {
-      ignores: IGNORE_PATTERNS,
+      ignores: IGNORE_PATTERNS
+    },
+    {
       languageOptions: {
-        lobals: {
+        globals: {
           ...globals.browser,
           ...globals.nodeBuiltin
         },
         parserOptions: {
-          project: ['./tsconfig.json']
+          project: [
+            './tsconfig.node.json',
+            './tsconfig.rsbuild.json',
+            //'./tsconfig.rslib.json',
+            //'./tsconfig.rspress.json',
+            './tsconfig.rstest.json'
+          ]
         }
       }
     },
@@ -167,19 +200,19 @@ define.lint(
     js.configs.recommended,
     ts.configs.strictTypeChecked,
     ts.configs.stylisticTypeChecked,
+    importPlugin.configs.recommended,
     promisePlugin.configs.recommended,
     unicornPlugin.configs.recommended,
     // nodePlugin.configs.recommended,
     reactPlugin.configs.recommended,
-    reactHooksPlugin.configs.recommended, // Comment out this line when using Vue.
+    // reactHooksPlugin.configs.recommended,
     jsxA11yPlugin.configs.recommended,
 
     {
-      ...importPlugin.configs.recommended,
+      name: 'Application',
       files: APP_FILES,
       plugins: ['@typescript-eslint', 'import', 'promise', 'unicorn'],
       rules: {
-        ...importPlugin.configs.recommended.rules,
         '@typescript-eslint/array-type': [
           'error',
           {
@@ -189,10 +222,7 @@ define.lint(
 
         // Keep project lint behavior aligned with the previous baseline.
         '@typescript-eslint/ban-ts-comment': 'off',
-        '@typescript-eslint/consistent-generic-constructors': [
-          'error',
-          'type-annotation'
-        ],
+        '@typescript-eslint/consistent-generic-constructors': ['error', 'type-annotation'],
         '@typescript-eslint/explicit-function-return-type': 'off',
 
         // Ignore intentionally unused identifiers with underscore prefix.
@@ -225,15 +255,7 @@ define.lint(
             alphabetize: {
               order: 'asc'
             },
-            groups: [
-              'builtin',
-              'external',
-              'parent',
-              'sibling',
-              'index',
-              'object',
-              'type'
-            ],
+            groups: ['builtin', 'external', 'parent', 'sibling', 'index', 'object', 'type'],
             'newlines-between': 'always',
             pathGroups: [
               {
@@ -252,37 +274,37 @@ define.lint(
           }
         ],
         // File names should, in principle, be in PascalCase, with some exceptions.
-        'unicorn/filename-case': 'off'
+        'unicorn/filename-case': 'off',
+        // `props` is the idiomatic Vue name; do not force `properties`.
+        'unicorn/name-replacements': [
+          'error',
+          {
+            replacements: {
+              props: false
+            }
+          }
+        ],
+        // Vue Options API (`render()`) and webpack loaders rely on `this`.
+        'unicorn/no-this-outside-of-class': 'off'
       },
       settings: {
         'import/resolver': {
-          'eslint-import-resolver-custom-alias': {
-            alias: {
-              '@': './src',
-              '~': './node_modules'
-            },
-            extensions: [
-              '.js',
-              '.ts',
-              '.json',
-              '.jsonc',
-              '.yml',
-              '.yaml',
-              '.jsx',
-              '.tsx',
-              '.vue',
-              '.svelte',
-              '.astro'
+          typescript: {
+            project: [
+              './tsconfig.node.json',
+              './tsconfig.rsbuild.json',
+              './tsconfig.rspress.json',
+              './tsconfig.rslib.json',
+              './tsconfig.rstest.json'
             ]
-          },
-          node: true,
-          typescript: true
+          }
         }
       }
     },
 
     {
       // Test files intentionally import from parent directories.
+      name: 'Tests',
       files: TEST_FILES,
       ...rstestPlugin.configs.recommended,
       rules: {
@@ -291,12 +313,18 @@ define.lint(
         'import/no-relative-parent-imports': 'off'
       }
     },
-
     {
-      files: DOC_FILES,
-      plugins: ['markdown'],
-      ...markdownPlugin.configs.recommended
+      // Since env.d.ts is a definition file, it does not check for some errors.
+      name: 'env.d.ts file',
+      files: ['**/env.d.ts'],
+      rules: {
+        '@typescript-eslint/ban-types': 'off',
+        '@typescript-eslint/no-empty-object-type': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
+        'unicorn/name-replacements': 'off'
+      }
     },
+    // Finally, disable any conflicts with Prettier's settings.
     prettierPlugin.rules
   ]
 );
@@ -306,7 +334,7 @@ define.lint(
  * @see {@link https://prettier.io/docs/options | Prettier Options}
  */
 define.fmt({
-  printWidth: 80,
+  printWidth: 100,
   tabWidth: 2,
   useTabs: false,
   semi: true,
@@ -316,6 +344,9 @@ define.fmt({
   bracketSameLine: false,
   arrowParens: 'avoid',
   endOfLine: 'lf',
+  plugins: ['prettier-plugin-yaml'],
+  // Vue
+  vueIndentScriptAndStyle: true,
   // Bellow is rstack options
   // see https://rstack.rs/guide/formatting
   ignorePatterns: IGNORE_PATTERNS,
@@ -327,6 +358,6 @@ define.fmt({
  * @see {@link https://rstack.rs/guide/cli/hooks | Git Hooks}
  */
 define.staged({
-  '*.{js,jsx,ts,tsx,mjs,cjs,mts,cts}': ['rs lint --fix', 'rs fmt'],
-  '*.{json,md,mdx,css,scss,less,html,yml,yaml}': 'rs fmt'
+  '*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx}': ['rs lint --fix', 'rs fmt'],
+  '*.{json,jsonc,md,mdx,yml,yaml,css,scss,less,html,vue}': 'rs fmt'
 });

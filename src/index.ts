@@ -1,12 +1,11 @@
-// Web Awesome imports
-import '@awesome.me/webawesome/dist/components/page/page.js';
-import '@awesome.me/webawesome/dist/components/input/input.js';
-import '@awesome.me/webawesome/dist/components/button/button.js';
-import '@awesome.me/webawesome/dist/components/icon/icon.js';
-import '@awesome.me/webawesome/dist/components/card/card.js';
-import '@awesome.me/webawesome/dist/styles/webawesome.css';
-import { setBasePath } from '@awesome.me/webawesome/dist/utilities/base-path.js';
-// Import base styles for the appß
+// Carbon Web Components imports
+import '@carbon/web-components/es/components/ui-shell/index.js';
+import '@carbon/web-components/es/components/search/index.js';
+import '@carbon/web-components/es/components/button/index.js';
+import '@carbon/web-components/es/components/icon-button/index.js';
+import '@carbon/web-components/es/components/tile/index.js';
+
+// Import base styles for the app
 import './styles.scss';
 import OlMap from 'ol/Map';
 import Overlay from 'ol/Overlay';
@@ -21,12 +20,10 @@ import { addProjection, Projection } from 'ol/proj';
 import XYZ from 'ol/source/XYZ';
 import TileGrid from 'ol/tilegrid/TileGrid';
 
+import type CDSSearch from '@carbon/web-components/es/components/search/search.js';
 import type MapBrowserEvent from 'ol/MapBrowserEvent';
 import type { Coordinate } from 'ol/coordinate';
 import type { Extent } from 'ol/extent';
-
-// Set the base path to the Web Awesome assets (e.g. icons, themes)
-setBasePath('@awesome.me/webawesome/dist');
 
 // Declare slRegionName as a global variable to be set by the dynamic script
 declare let slRegionName:
@@ -57,14 +54,12 @@ const LOCATION_URI_PREFIX = 'secondlife://';
 const SL_BASE_URL = 'https://secondlife.com/';
 const TILE_URL = 'https://secondlife-maps-cdn.akamaized.net';
 
-function getRequiredElement<ElementType extends HTMLElement>(
-  id: string
-): ElementType {
+function getRequiredElement(id: string): HTMLElement {
   const element = document.getElementById(id);
   if (!element) {
     throw new Error(`Required element not found: #${id}`);
   }
-  return element as ElementType;
+  return element;
 }
 
 /**
@@ -138,7 +133,7 @@ const slLayer = new Tile({
       const region_x = x * regionsPerTileEdge;
       const region_y = (Math.abs(y) - 1) * regionsPerTileEdge;
 
-      return `${TILE_URL}/map-${zoomLevel}-${region_x}-${region_y}-objects.jpg`;
+      return `${TILE_URL}/map-${String(zoomLevel)}-${String(region_x)}-${String(region_y)}-objects.jpg`;
     },
     attributions: `© <a href="${SL_BASE_URL}">Second Life</a>`
   })
@@ -148,7 +143,7 @@ const slLayer = new Tile({
 const map = new OlMap({
   controls: [
     new MousePosition({
-      className: 'ol-mouse-position wa-text-end',
+      className: 'ol-mouse-position',
       coordinateFormat: (coordinate?: Coordinate) => {
         if (!coordinate) return '';
         return coordinate.map(c => c.toFixed(0)).join(', ');
@@ -194,8 +189,8 @@ const map = new OlMap({
 /**
  * Add a click handler to the map to render the popup.
  */
-map.on('singleclick', async (evt: MapBrowserEvent) => {
-  const coordinate = evt.coordinate;
+map.on('singleclick', (event_: MapBrowserEvent) => {
+  const coordinate = event_.coordinate;
   const x = coordinate[0] / TILE_SIZE;
   const y = coordinate[1] / TILE_SIZE;
   // Work out region co-coords, and local co-coords within region
@@ -207,23 +202,22 @@ map.on('singleclick', async (evt: MapBrowserEvent) => {
 
   // Add a dynamic script to get this region name, and then trigger a URL change
   // based on the results
-  const scriptURL = `${CAPABILITY_BASE_URL}cap/0/b713fe80-283b-4585-af4d-a3b7d9a32492?var=slRegionName&grid_x=${int_x}&grid_y=${int_y}`;
+  const scriptURL = `${CAPABILITY_BASE_URL}cap/0/b713fe80-283b-4585-af4d-a3b7d9a32492?var=slRegionName&grid_x=${String(int_x)}&grid_y=${String(int_y)}`;
   // Once the script has loaded, we use the result to teleport the user into SL
-  slAddDynamicScript(scriptURL, async () => {
+  slAddDynamicScript(scriptURL, () => {
     if (!slRegionName || typeof slRegionName !== 'string') {
       return;
     }
     const regionName = encodeURIComponent(slRegionName);
-    const regionLocation = `${regionName}/${local_x}/${local_y}`;
+    const regionLocation = `${regionName}/${String(local_x)}/${String(local_y)}`;
     const slurl = `${LOCATION_URI_PREFIX}${regionLocation}`;
 
     title.innerHTML = `<a href="${slurl}">${slRegionName}</a>`;
     content.innerHTML =
-      `<p>Tile: ${int_x}, ${int_y}<br />` +
-      `Coordinate: ${Math.round(coordinate[0])}, ${Math.round(coordinate[1])}</p>` +
-      `<div slot="footer" class="wa-cluster wa-gap-2xs"><wa-button variant="brand" title="Teleport" href="${slurl}">Teleport</wa-button>` +
-      `<wa-button variant="neutral" href="${JOIN_BASE_URL}">Join free today</wa-button></div>` +
-      `</div>`;
+      `<p>Tile: ${String(int_x)}, ${String(int_y)}<br />` +
+      `Coordinate: ${String(Math.round(coordinate[0]))}, ${String(Math.round(coordinate[1]))}</p>` +
+      `<div class="popup-actions"><cds-button size="sm" title="Teleport" href="${slurl}">Teleport</cds-button>` +
+      `<cds-button kind="secondary" size="sm" href="${JOIN_BASE_URL}">Join free today</cds-button></div>`;
     overlay.setPosition(coordinate);
   });
 });
@@ -255,42 +249,53 @@ function slAddDynamicScript(
   script.type = 'text/javascript';
   document.body.append(script);
 
-  if (onLoadHandler) {
-    // Need to use ready state change for IE as it doesn't support onload for scripts
-    script.addEventListener('readystatechange', () => {
-      const s = script as HTMLScriptElement & {
-        readyState?: string;
-      };
-      if (s.readyState === 'complete' || s.readyState === 'loaded') {
-        onLoadHandler();
-      }
-    });
-
-    // Standard onload for Firefox/Safari/Opera etc
-    script.onload = () => onLoadHandler();
-  }
-}
-
-document
-  .getElementById('search-form')
-  ?.addEventListener('submit', (e: Event) => {
-    e.preventDefault();
-    const input = document.getElementById('search-input') as HTMLInputElement;
-    const regionName = input.value.trim();
-    if (regionName) {
-      // Trigger a click on the map to show the popup for the region
-      const scriptURL = `${CAPABILITY_BASE_URL}cap/0/d661249b-2b5a-4436-966a-3d3b8d7a574f?var=slCoord&sim_name=${encodeURIComponent(regionName)}`;
-      slAddDynamicScript(scriptURL, () => {
-        if (!slCoord || slCoord.error) {
-          alert('Region not found');
-          return;
-        }
-
-        const local_x = slCoord.x * TILE_SIZE;
-        const local_y = slCoord.y * TILE_SIZE;
-
-        map.getView().setCenter([local_x, local_y]);
-        map.getView().setZoom(7); // Set a reasonable zoom level
-      });
+  // Need to use ready state change for IE as it doesn't support onload for scripts
+  script.addEventListener('readystatechange', () => {
+    const s = script as HTMLScriptElement & {
+      readyState?: string;
+    };
+    if (s.readyState === 'complete' || s.readyState === 'loaded') {
+      onLoadHandler();
     }
   });
+
+  // Standard onload for Firefox/Safari/Opera etc
+  script.onload = () => {
+    onLoadHandler();
+  };
+}
+
+/** Search for a region by name and move the map view to it. */
+function searchRegion(regionName: string): void {
+  const scriptURL = `${CAPABILITY_BASE_URL}cap/0/d661249b-2b5a-4436-966a-3d3b8d7a574f?var=slCoord&sim_name=${encodeURIComponent(regionName)}`;
+  slAddDynamicScript(scriptURL, () => {
+    if (!slCoord || slCoord.error) {
+      alert('Region not found');
+      return;
+    }
+
+    const local_x = slCoord.x * TILE_SIZE;
+    const local_y = slCoord.y * TILE_SIZE;
+
+    map.getView().setCenter([local_x, local_y]);
+    map.getView().setZoom(7); // Set a reasonable zoom level
+  });
+}
+
+// The input inside <cds-search> lives in shadow DOM and does not take part in
+// form submission, so trigger the search on the Enter key instead.
+const searchInput = getRequiredElement('search-input') as CDSSearch;
+searchInput.addEventListener('keydown', (event_: KeyboardEvent) => {
+  if (event_.key !== 'Enter') {
+    return;
+  }
+  const regionName = searchInput.value.trim();
+  if (regionName) {
+    searchRegion(regionName);
+  }
+});
+
+// <cds-header-global-action> renders as a button, so open the repository from a click handler.
+getRequiredElement('github-link').addEventListener('click', () => {
+  window.open('https://github.com/logue/ol-slmap', '_blank', 'noopener');
+});

@@ -1,73 +1,71 @@
 <!doctype html>
-<html
-  class="wa-theme-default wa-palette-default wa-brand-blue wa-neutral-gray"
-  lang="en"
->
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>OpenLayers SecondLife Map Viewer</title>
   </head>
   <body>
-    <wa-page flex-direction="column" mobile-breakpoint="768">
-      <header
-        class="wa-dark wa-cluster wa-split wa-align-items-center"
-        slot="header"
-      >
-        <h1 class="wa-heading-l" slot="header-start">
-          OpenLayers SecondLife Map Viewer
-        </h1>
-
-        <div
-          class="wa-cluster wa-gap-s wa-align-items-center"
-          slot="header-end"
-        >
-          <wa-button
-            appearance="plain"
-            href="https://github.com/logue/ol-slmap"
-            size="small"
-            target="_blank"
-          >
-            <wa-icon family="brands" name="github" />
-          </wa-button>
-          <form class="wa-desktop-only navbar-search" id="search-form">
-            <wa-input
-              clearable
-              form="search-form"
-              id="search-input"
-              placeholder="Region..."
-              size="small"
-              type="search"
-            >
-              <wa-button
-                appearance="plain"
-                id="search"
-                size="small"
-                slot="end"
-                type="submit"
-              >
-                <wa-icon name="magnifying-glass" />
-              </wa-button>
-            </wa-input>
-          </form>
-          <wa-button class="wa-mobile-only" size="small" variant="neutral">
-            <wa-icon name="magnifying-glass" />
-          </wa-button>
+    <cds-header aria-label="OpenLayers SecondLife Map Viewer" class="cds--g100">
+      <cds-header-name href="./">OpenLayers SecondLife Map Viewer</cds-header-name>
+      <div class="cds--header__global">
+        <div class="navbar-search">
+          <cds-search
+            id="search-input"
+            label-text="Search region"
+            placeholder="Region..."
+            size="sm"
+          ></cds-search>
         </div>
-      </header>
-      <main>
-        <div id="map"></div>
-        <div id="mouse-position"></div>
-      </main>
-    </wa-page>
+        <cds-header-global-action
+          aria-label="GitHub repository"
+          id="github-link"
+          tooltip-text="GitHub"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            slot="icon"
+            height="20"
+            width="20"
+            fill="currentColor"
+            viewBox="0 0 32 32"
+          >
+            <title>Logo GitHub</title>
+            <title>logo--github</title>
+            <path
+              style="fill-rule: evenodd"
+              d="M16,2a14,14,0,0,0-4.43,27.28c.7.13,1-.3,1-.67s0-1.21,0-2.38c-3.89.84-4.71-1.88-4.71-1.88A3.71,3.71,0,0,0,6.24,22.3c-1.27-.86.1-.85.1-.85A2.94,2.94,0,0,1,8.48,22.9a3,3,0,0,0,4.08,1.16,2.93,2.93,0,0,1,.88-1.87c-3.1-.36-6.37-1.56-6.37-6.92a5.4,5.4,0,0,1,1.44-3.76,5,5,0,0,1,.14-3.7s1.17-.38,3.85,1.43a13.3,13.3,0,0,1,7,0c2.67-1.81,3.84-1.43,3.84-1.43a5,5,0,0,1,.14,3.7,5.4,5.4,0,0,1,1.44,3.76c0,5.38-3.27,6.56-6.39,6.91a3.33,3.33,0,0,1,.95,2.59c0,1.87,0,3.38,0,3.84s.25.81,1,.67A14,14,0,0,0,16,2Z"
+            />
+          </svg>
+        </cds-header-global-action>
+      </div>
+    </cds-header>
+    <main>
+      <div id="map"></div>
+      <div id="mouse-position"></div>
+    </main>
     <div class="ol-popup" id="popup">
-      <wa-card>
+      <cds-tile>
         <div class="popup-header-wrapper">
           <h3 id="popup-title">Region</h3>
-          <wa-icon-button class="popup-close" id="popup-closer" name="x-lg" />
+          <cds-icon-button align="left" id="popup-closer" kind="ghost" size="sm">
+            <svg
+              fill="currentColor"
+              height="16"
+              slot="icon"
+              viewBox="0 0 32 32"
+              width="16"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M17.4141 16 24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8 22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16z"
+              />
+            </svg>
+            <span slot="tooltip-content">Close</span>
+          </cds-icon-button>
         </div>
         <div id="popup-content"></div>
-      </wa-card>
+      </cds-tile>
     </div>
   </body>
 </html>

@@ -1,39 +1,59 @@
-name: Build Site
-permissions:
-  contents: read
-  pull-requests: write
+name: Build and deploy to GitHub Pages
+
 on:
+  workflow_dispatch: {}
   push:
-    branches: ['master']
+    branches: [master]
   pull_request:
-    branches: ['master']
+    branches: [master]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
-  cache-and-install:
-    runs-on: ubuntu-latest
-
+  build:
+    runs-on: ubuntu-slim
     steps:
-      - name: Checkout  ✔
+      - name: Checkout ✔
         uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v6
-        name: Install pnpm 📦
+      - name: Install pnpm 📦
+        uses: pnpm/action-setup@v6
         with:
           run_install: false
 
       - name: Install Node.js ⚡️
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
-          cache: 'pnpm'
-          node-version: 24
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+          node-version: 26
 
-      - name: Build 🔧
-        run: |
-          pnpm install
-          pnpm build
+      - name: Install dependencies 🧩
+        run: pnpm install --frozen-lockfile
 
-      - name: Deploy to gh-pages 🚀
-        uses: JamesIves/github-pages-deploy-action@v4
+      - name: Build site 🔧
+        run: pnpm run build
+
+      - name: Upload Pages artifact 📜
+        uses: actions/upload-pages-artifact@v3
         with:
-          branch: gh-pages # The branch the action should deploy to.
-          folder: dist # The folder the action should deploy.
+          path: dist
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-slim
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages 🚀
+        id: deployment
+        uses: actions/deploy-pages@v4

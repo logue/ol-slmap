@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.rslib.json",
+  "include": ["env.d.ts", "src/**/__tests__/*"],
+  "exclude": ["**/node_modules", "**/.*/"],
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "tsBuildInfoFile": "./.rstack/tsconfig.rstest.tsbuildinfo",
+    "types": ["rstack/test/globals", "rstack/test/importMeta", "node"]
+  }
+}

@@ -1,5 +1,26 @@
+# Version selection is delegated to package.json constraints.
+minimumReleaseAge: 0
+
 allowBuilds:
-  core-js: true
-  pnpm: true
-minimumReleaseAgeExclude:
-  - '@types/node@26.5.0'
+  '@carbon/colors': true
+  '@carbon/feature-flags': false
+  '@carbon/grid': true
+  '@carbon/icon-helpers': true
+  '@carbon/icons': true
+  '@carbon/layout': false
+  '@carbon/motion': false
+  '@carbon/styles': true
+  '@carbon/themes': true
+  '@carbon/type': true
+  '@carbon/utilities': true
+  '@carbon/web-components': true
+  '@ibm/plex': true
+  '@ibm/plex-mono': true
+  '@ibm/plex-sans': true
+  '@ibm/plex-sans-arabic': false
+  '@ibm/plex-sans-devanagari': false
+  '@ibm/plex-sans-hebrew': false
+  '@ibm/plex-sans-thai': false
+  '@ibm/plex-sans-thai-looped': false
+  '@ibm/plex-serif': false
+  '@parcel/watcher': true

@@ -1,12 +1,6 @@
 {
   "extends": "@tsconfig/node-lts/tsconfig.json",
-  "include": [
-    "env.d.ts",
-    "rsbuild.config.*",
-    "rslib.config.*",
-    "rslint.config.*",
-    "package.json"
-  ],
+  "include": ["env.d.ts", "rsbuild.config.*", "rslib.config.*", "rslint.config.*", "package.json"],
   "exclude": ["**/node_modules", "**/.*/"],
   "compilerOptions": {
     "composite": true,

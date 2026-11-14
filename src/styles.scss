@@ -1,27 +1,68 @@
+@use '@carbon/styles' with (
+  $use-per-family-plex: true,
+  $use-akamai-cdn: true,
+  $font-families: (
+    sans: (
+      'IBM Plex Sans',
+      'IBM Plex Sans JP',
+      'IBM Plex Sans SC',
+      Twemoji,
+      'Helvetica Neue',
+      Arial,
+      sans-serif
+    ),
+    mono: (
+      'IBM Plex Mono',
+      'IBM Plex Sans JP',
+      'IBM Plex Sans SC',
+      Twemoji,
+      Menlo,
+      'DejaVu Sans Mono',
+      monospace
+    )
+  )
+);
+@use '@carbon/styles/scss/spacing' as *;
+@use '@carbon/styles/scss/type';
+
+// Include type reset
+@include type.reset();
+// Include default type styles, targets h1, h2, h3, etc
+@include type.default-type();
+// Include utility classes for type-related properties
+@include type.type-classes();
+// Emoji
+@import 'https://cdn.jsdelivr.net/npm/@sableclient/twemoji-font@1.0.4/dist/index.min.css';
+/*
+ * Carbon's reset, type and theme rules take precedence; only demo-specific layout is defined here.
+ * Everything below follows the active theme through Carbon's CSS custom properties.
+ */
+
 @import 'ol/ol.css';
 
-/* wa-input のサイズ調整 */
+/* ヘッダー内検索ボックス (cds--g100 ゾーンでダークヘッダーに馴染ませる) */
 .navbar-search {
-  wa-input {
+  display: flex;
+  align-items: center;
+  margin-inline-end: $spacing-03;
+
+  cds-search {
     width: 14rem;
   }
 }
 
-/* 地図エリア */
-main {
-  padding: 0; // ::slotted(main) を上書き
-}
-
+/* 地図エリア (Carbon ヘッダーは高さ 3rem の fixed 配置) */
 #map {
   position: absolute;
-  top: var(--header-height);
+  top: $spacing-09;
   bottom: 0;
   width: 100%;
   background-color: #1d475f;
 }
 
 .ol-mouse-position {
-  color: var(--wa-color-warning);
+  color: var(--cds-support-warning);
+  text-align: end;
 }
 
 .ol-popup {
@@ -29,7 +70,7 @@ main {
   bottom: 12px;
   left: -50px;
   min-width: 300px;
-  box-shadow: var(--wa-color-shadow);
+  box-shadow: 0 2px 6px rgb(0 0 0 / 30%);
 
   &:after,
   &:before {
@@ -41,10 +82,28 @@ main {
     width: 0;
     position: absolute;
     pointer-events: none;
-    border-top-color: var(--wa-color-neutral-border-normal);
+  }
+  &:before {
+    border-top-color: var(--cds-border-subtle-01);
+    border-width: 11px;
+    margin-left: -11px;
   }
   &:after {
+    border-top-color: var(--cds-layer-01);
     border-width: 10px;
     margin-left: -10px;
   }
+}
+
+.popup-header-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-03;
+}
+
+.popup-actions {
+  display: flex;
+  gap: $spacing-02;
+  margin-block-start: $spacing-03;
 }
